@@ -1,5 +1,4 @@
 <script lang="ts">
-  export let currentView: string
   
   let formData = {
     passportData: '',
@@ -21,10 +20,47 @@
     }]
   }
 
-  function handleSubmit() {
-    console.log('Testament data:', JSON.stringify(formData))
-    // TODO: Implement contract interaction
-    currentView = 'home'
+  async function handleSubmit() {
+    try {
+      // Create the testament data object without ID first
+      const testamentData = {
+        createdAt: new Date().toISOString(),
+        ...formData
+      }
+
+      // Create a hash of the testament data
+      const dataString = JSON.stringify(testamentData)
+      const encoder = new TextEncoder()
+      const data = encoder.encode(dataString)
+      console.log(data)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+      const hashArray = Array.from(new Uint8Array(hashBuffer))
+      const testamentId = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+      
+      // Add the hash as ID
+      const finalTestamentData = {
+        id: testamentId,
+        ...testamentData
+      }
+
+      // Send the data to your backend API
+      const response = await fetch('http://localhost:3000/api/testaments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(finalTestamentData)
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save testament')
+      }
+
+      console.log('Testament saved successfully:', testamentId)
+    } catch (error) {
+      console.error('Error saving testament:', error)
+      // You might want to show an error message to the user here
+    }
   }
 </script>
 
