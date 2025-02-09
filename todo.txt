@@ -90,15 +90,9 @@ zk-inheritance/
 │   ├── next.config.js            # ⚙️  Konfiguracija za Next.js
 │   ├── tsconfig.json             # 🛠️  TypeScript podešavanja
 │
-│── contracts/                    # 📌 Rust smart contract (Arbitrum Stylus)
-│   ├── src/
-│   │   ├── lib.rs                # 📜 Glavni pametni ugovor
-│   │   ├── types.rs              # 🏗️  Strukture podataka (Testament, Heir)
-│   │   ├── utils.rs              # 🛠️  Pomoćne funkcije
-│   │   ├── zk_verify.rs          # 🔐 Modul za integraciju zkVerify
-│   │   ├── tests.rs              # ✅ Testovi za ugovor
-│   ├── Cargo.toml                # 📦 Rust zavisnosti (Stylus SDK, zkVerify)
-│   ├── build.rs                  # 🏗️  Skripta za kompajliranje ugovora
+│── contracts/                     # 📌 Solidity pametni ugovor (za Arbitrum)
+│   ├── Testament.sol              # 📜 Glavni pametni ugovor
+│   ├── Migrations.sol             # 🔄 Za deployment ugovora
 │
 │── circuits/                     # 📌 Circom fajlovi za zkProof
 │   ├── hashers.circom            # 🔐 Heširanje podataka
@@ -120,7 +114,7 @@ zk-inheritance/
 │   │   ├── 0xHeir2.json          # 📜 Drugi naslednik
 │
 │── scripts/                      # 📌 Skripte za deployment & testiranje
-│   ├── deploy_contract.ts        # 🚀 Deploy Rust smart contracta
+│   ├── deploy_contract.ts        # 🚀 Deploy smart contracta
 │   ├── generate_testament.ts     # 🏗️  Generisanje JSON fajla za testament
 │   ├── hash_testament.ts         # 🔐 Generisanje SHA-256 hash-a
 │   ├── convert_json_to_pdf.ts    # 📄 Konverzija JSON-a u PDF
