@@ -1,6 +1,7 @@
 use stylus_sdk::{msg, prelude::*};
 use crate::types::{Testament, Heir};
 
+
 #[stylus::contract]
 pub struct TestamentContract {
     pub testaments: Vec<Testament>, // Lista svih testamenata

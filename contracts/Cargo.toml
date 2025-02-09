@@ -4,10 +4,14 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-stylus-sdk = "0.7.0"               # SDK za Arbitrum Stylus
+
+stylus-sdk = "0.6.0"               # SDK za Arbitrum Stylus
 serde = { version = "1.0", features = ["derive"] }  # Za serializaciju i deserializaciju struktura
-sha2 = "0.10"                    # Za SHA-256 heširanje
-#tiny-keccak = "2.0.2"
+#sha2 = "0.10"                    # Za SHA-256 heširanje
+
+alloy-primitives = { version = "0.8", default-features = false, features = ["tiny-keccak"] }
+
+keccak = "0.1.5"
 #ring = "0.17.8"
 #zk-verify-sdk = "0.1"            # Za integraciju zkVerify (placeholder, ažuriraj sa tačnom verzijom)
 
