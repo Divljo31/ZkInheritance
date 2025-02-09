@@ -18,6 +18,8 @@ pnpm-debug.log*
 dist/
 build/
 out/
+artifacts/
+cache/
 
 # Editor & OS specific files
 .DS_Store
