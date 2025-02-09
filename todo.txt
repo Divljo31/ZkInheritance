@@ -29,26 +29,26 @@
     pub struct Heir {
         address: Address,
         percentage: u64,
-        assets: Vec<String>, // Lista nasledstva (npr. "Kuća u Beogradu", "BMW X5")
         document_hash: String, // IPFS ili Arweave hash testamenta(al cemo ipak hakovati sistem i napraviti json fajlove)
     }
 
 
 -flow
-    -korsinik unosi svoje podatke iz pasosa
-        -moze da napravi testament ili da procita ako ima neki za njega 
-        -citanje testamenta
-            -vadimo iz "Baze podataka-foldera" fajl koji ce iz json u pdf i da se prikaze na frontu
-                -a u samom jasonu ili ti testametnu imamo deo gde je hesh svi podataka iz pasosa i adrese i on jedini ima pristup
-        -pravljenja testamenta
-            -on mora unosese podatke naslednika(pasos i adresa) koji se hesira
-            -mora da upise sta nasledjuje svaki naslenik posebno i to se generise u posebne json fajlove koji se upisuju u nasu bazu
-                -procent novca iz svog valeta
-                -podaci sta ostalo dobija
-            -unese podatke advokata koji ce odradi approve da je umro
-    -advokat
-        -unosi svoje podatke za verfikaciju i hash mrtvog coveka ili glavnog testamenta
-        -i on moze da odradi approve da je covek rip i onda aktivira testament
+    -connect wallet
+        -korsinik unosi svoje podatke iz pasosa
+            -moze da napravi testament ili da procita ako ima neki za njega 
+                -citanje testamenta
+                    -vadimo iz "Baze podataka-foldera" fajl koji ce iz json u pdf i da se prikaze na frontu
+                        -a u samom jasonu ili ti testametnu imamo deo gde je hesh svi podataka iz pasosa i adrese i on jedini ima pristup
+                -pravljenja testamenta
+                    -on mora unosese podatke naslednika(pasos i adresa) koji se hesira
+                    -mora da upise sta nasledjuje svaki naslenik posebno i to se generise u posebne json fajlove koji se upisuju u nasu bazu
+                        -procent novca iz svog valeta
+                        -podaci sta ostalo dobija
+                    -unese podatke advokata koji ce odradi approve da je umro
+        -advokat
+            -unosi svoje podatke za verfikaciju i hash mrtvog coveka ili glavnog testamenta
+            -i on moze da odradi approve da je covek rip i onda aktivira testament
         
 
 
@@ -62,6 +62,8 @@
     -ai za predlog oko raspodele testamenta i support 
     -kada se akrivira testament, dobije se obavestenje na mejl 
     -dodati vise advokata
+    -da li moze odmah da vidi testamen ili tek kada se realizuje
+    
 
 
 zk-inheritance/
