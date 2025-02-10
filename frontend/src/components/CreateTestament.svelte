@@ -4,6 +4,7 @@
     passportData: '',
     lawyerAddress: '',
     heirs: [{
+      passportId: '',
       name: '',
       walletAddress: '',
       percentage: '',
@@ -13,6 +14,7 @@
 
   function addHeir() {
     formData.heirs = [...formData.heirs, {
+      passportId: '',
       name: '',
       walletAddress: '',
       percentage: '',
@@ -92,6 +94,15 @@
     {#each formData.heirs as heir, i}
       <div class="heir-section">
         <h3>Heir {i + 1}</h3>
+        <div class="form-group">
+          <label for="name{i}">Passport ID</label>
+          <input 
+            type="text" 
+            id="passportId{i}" 
+            bind:value={heir.passportId} 
+            required
+          />
+        </div>
         <div class="form-group">
           <label for="name{i}">Name</label>
           <input 

@@ -1,9 +1,13 @@
 <script lang="ts">
-  let testamentId = ''
-
+  let formData = {
+    testamentId: '',
+    passportId: '',
+    name: '',
+    walletAddress: '',
+  }
   async function handleSubmit() {
-    if (!testamentId) return
-    console.log('Fetching testament with ID:', testamentId)
+    if (!formData.testamentId) return
+    console.log('Fetching testament with ID:', formData.testamentId)
     // TODO: Implement contract interaction to fetch testament details
   }
 </script>
@@ -17,9 +21,39 @@
       <input 
         type="number" 
         id="testamentId" 
-        bind:value={testamentId} 
+        bind:value={formData.testamentId} 
         placeholder="Enter testament ID"
         min="0"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="passportId">Passport ID</label>
+      <input 
+        type="text" 
+        id="passportId" 
+        bind:value={formData.passportId} 
+        placeholder="Enter passport ID"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input 
+        type="text" 
+        id="name" 
+        bind:value={formData.name} 
+        placeholder="Enter your Name"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="walletAddress">Wallet Address</label>
+      <input 
+        type="text" 
+        id="walletAddress" 
+        bind:value={formData.walletAddress} 
+        placeholder="Enter Wallet Address"
         required
       />
     </div>
