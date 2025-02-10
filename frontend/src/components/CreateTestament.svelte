@@ -12,6 +12,7 @@
   }
 
   let testamentID: bigint | null = null;
+  const FIELD_SIZE = BigInt('21888242871839275222246405745257275088548364400416034343698204186575808495617');
 
   function addHeir() {
     formData.heirs = [...formData.heirs, {
@@ -39,10 +40,11 @@
       const hashBuffer = await crypto.subtle.digest('SHA-256', data)
       const hashArray = Array.from(new Uint8Array(hashBuffer))
       const testamentId = hashArray.map(b => b.toString(10).padStart(2, '0')).join('')
+      const testamentIdBigInt = BigInt(testamentId) % FIELD_SIZE;
       
       // Add the hash as ID
       const finalTestamentData = {
-        id: testamentId,
+        id: testamentIdBigInt.toString(),
         ...testamentData
       }
 
@@ -59,9 +61,9 @@
         throw new Error('Failed to save testament')
       }
 
-      testamentID = BigInt(testamentId);
+      testamentID = testamentIdBigInt;
 
-      console.log('Testament saved successfully:', testamentId)
+      console.log('Testament saved successfully:', testamentIdBigInt)
     } catch (error) {
       console.error('Error saving testament:', error)
       // You might want to show an error message to the user here
