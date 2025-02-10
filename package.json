@@ -3,6 +3,7 @@
     "@reown/appkit": "^1.6.7",
     "@reown/appkit-adapter-ethers": "^1.6.7",
     "circomlib": "^2.0.5",
+    "circomlibjs": "^0.1.7",
     "svelte": "^5.19.9",
     "vite": "^6.1.0"
   },

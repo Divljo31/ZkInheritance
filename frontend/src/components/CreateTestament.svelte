@@ -1,5 +1,4 @@
 <script lang="ts">
-  
   let formData = {
     passportData: '',
     lawyerAddress: '',
@@ -11,6 +10,8 @@
       items: ''
     }]
   }
+
+  let testamentID: bigint | null = null;
 
   function addHeir() {
     formData.heirs = [...formData.heirs, {
@@ -37,7 +38,7 @@
       console.log(data)
       const hashBuffer = await crypto.subtle.digest('SHA-256', data)
       const hashArray = Array.from(new Uint8Array(hashBuffer))
-      const testamentId = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+      const testamentId = hashArray.map(b => b.toString(10).padStart(2, '0')).join('')
       
       // Add the hash as ID
       const finalTestamentData = {
@@ -57,6 +58,8 @@
       if (!response.ok) {
         throw new Error('Failed to save testament')
       }
+
+      testamentID = BigInt(testamentId);
 
       console.log('Testament saved successfully:', testamentId)
     } catch (error) {
@@ -151,6 +154,12 @@
       Create Testament
     </button>
   </form>
+  {#if testamentID}
+  <div class="testament-result">
+    <h2>Testament Created Successfully</h2>
+    <p><strong>ID:</strong> {testamentID}</p>
+  </div>
+{/if}
 </div>
 
 <style>
