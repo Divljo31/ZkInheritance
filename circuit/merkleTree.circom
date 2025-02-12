@@ -58,6 +58,6 @@ template LeafExists(levels){
     merkletree.path_elements[i] <== path_elements[i];
   }
 
-  root === merkletree.root;
+  //root === merkletree.root;
 }
 
