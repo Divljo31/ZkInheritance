@@ -1,4 +1,18 @@
 <script lang="ts">
+  import { mulPointEscalar, Base8, Point } from "@zk-kit/baby-jubjub";
+  import crypto from "crypto";
+
+  //Hardcoded for hackathon Demo
+  const generateKeys = (): { privateKey: bigint; publicKey: Point<bigint> } => {
+    const privateKey =
+      BigInt("0x" + crypto.randomBytes(32).toString("hex")) %
+      BigInt(
+        "2736030358979909402780800718157159386076813972158567259200215660948447373041",
+      ); // Generate random private key
+    const publicKey = mulPointEscalar(Base8, privateKey); // Compute public key by scalar multiplication
+    return { privateKey, publicKey };
+  };
+
   let formData = {
     passportData: '',
     lawyerAddress: '',
@@ -24,9 +38,8 @@
     }]
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(){
     try {
-      // Create the testament data object without ID first
       const testamentData = {
         createdAt: new Date().toISOString(),
         ...formData
@@ -35,9 +48,9 @@
       // Create a hash of the testament data
       const dataString = JSON.stringify(testamentData)
       const encoder = new TextEncoder()
-      const data = encoder.encode(dataString)
-      console.log(data)
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+      const IdTestament = encoder.encode(dataString)
+      console.log(IdTestament)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', IdTestament)
       const hashArray = Array.from(new Uint8Array(hashBuffer))
       const testamentId = hashArray.map(b => b.toString(10).padStart(2, '0')).join('')
       const testamentIdBigInt = BigInt(testamentId) % FIELD_SIZE;
@@ -48,13 +61,30 @@
         ...testamentData
       }
 
+      // Generate private and public keys for the user
+      const { privateKey, publicKey } = generateKeys();
+      console.log("Private key is: ", privateKey);
+      const publicKeyX = publicKey[0];
+      const publicKeyY = publicKey[1];
+
+      //console.log("Generated private key:", privateKey.toString(16));
+      //console.log("Generated public key:", publicKeyX, publicKeyY);
+
+      // Generate necessary data
+      const data = {
+        name: formData.heirs[0].name,
+        pid: formData.heirs[0].passportId,
+        publicKeyX: publicKeyX.toString(),
+        publicKeyY: publicKeyY.toString(),
+      };
+
       // Send the data to your backend API
       const response = await fetch('http://localhost:3000/api/testaments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(finalTestamentData)
+        body: JSON.stringify(data)
       })
 
       if (!response.ok) {
