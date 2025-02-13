@@ -1,6 +1,17 @@
 <script lang="ts">
-  import { modal } from '../lib/appkit'
-  import { ethers } from 'ethers';
+  import { mulPointEscalar, Base8, Point } from "@zk-kit/baby-jubjub";
+  import crypto from "crypto";
+
+  //Hardcoded for hackathon Demo
+  const generateKeys = (): { privateKey: bigint; publicKey: Point<bigint> } => {
+    const privateKey =
+      BigInt("0x" + crypto.randomBytes(32).toString("hex")) %
+      BigInt(
+        "2736030358979909402780800718157159386076813972158567259200215660948447373041",
+      ); // Generate random private key
+    const publicKey = mulPointEscalar(Base8, privateKey); // Compute public key by scalar multiplication
+    return { privateKey, publicKey };
+  };
 
   let formData = {
     passportData: '',
@@ -40,38 +51,8 @@
     }]
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(){
     try {
-      if (!modal) {
-        throw new Error('Wallet modal not initialized')
-      }
-
-      // Get the provider using the Reown AppKit adapter
-      const provider = new ethers.BrowserProvider(await modal.getProvider('eip155'))
-      
-      if (!provider) {
-        throw new Error('Failed to get provider')
-      }
-
-      // Get signer from provider
-      const signer = await provider.getSigner()
-      
-      // Create contract instance
-      const arbContract = new ethers.Contract(
-        arbContractAddress, 
-        arbContractABI, 
-        signer
-      )
-
-      // Create testament on the blockchain
-      const tx = await arbContract.createTestament(formData.lawyerAddress);
-      await tx.wait();
-
-
-      const heirTx = await arbContract.addHeir(3, formData.heirs[0].walletAddress, formData.heirs[0].percentage, formData.heirs[0].items);
-      await heirTx.wait();
-
-      // Create the testament data object without ID first
       const testamentData = {
         createdAt: new Date().toISOString(),
         ...formData
@@ -80,8 +61,9 @@
       // Create a hash of the testament data
       const dataString = JSON.stringify(testamentData)
       const encoder = new TextEncoder()
-      const data = encoder.encode(dataString)
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+      const IdTestament = encoder.encode(dataString)
+      console.log(IdTestament)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', IdTestament)
       const hashArray = Array.from(new Uint8Array(hashBuffer))
       const testamentId = hashArray.map(b => b.toString(10).padStart(2, '0')).join('')
       const testamentIdBigInt = BigInt(testamentId) % FIELD_SIZE;
@@ -91,7 +73,23 @@
         id: testamentIdBigInt.toString(),
         ...testamentData
       }
-   
+
+      // Generate private and public keys for the user
+      const { privateKey, publicKey } = generateKeys();
+      console.log("Private key is: ", privateKey);
+      const publicKeyX = publicKey[0];
+      const publicKeyY = publicKey[1];
+
+      //console.log("Generated private key:", privateKey.toString(16));
+      //console.log("Generated public key:", publicKeyX, publicKeyY);
+
+      // Generate necessary data
+      const data = {
+        name: formData.heirs[0].name,
+        pid: formData.heirs[0].passportId,
+        publicKeyX: publicKeyX.toString(),
+        publicKeyY: publicKeyY.toString(),
+      };
 
       // Send the data to your backend API
       const response = await fetch('http://localhost:3000/api/testaments', {
@@ -99,7 +97,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(finalTestamentData)
+        body: JSON.stringify(data)
       })
 
       if (!response.ok) {
