@@ -48,10 +48,10 @@ The project consists of four primary components:
 ### **1. Creating Inheritance**
 ```mermaid
 graph TD;
-    User-->>Frontend: Inheritance Data
-    Frontend-->>Backend: Send Data
-    Backend-->>Data Base: Store in Merkle Tree
-    Backend-->>Smart Contract: Lock Funds
+    User -->|Inheritance Data| Frontend
+    Frontend -->|Send Data| Backend
+    Backend -->|Store in Merkle Tree| DataBase
+    Backend -->|Lock Funds| SmartContract
 ```
 1. User inputs inheritance details in the frontend.
 2. The frontend sends the data to the backend.
@@ -61,13 +61,14 @@ graph TD;
 ### **2. Reading & Claiming Inheritance**
 ```mermaid
 graph TD;
-    User-->>Frontend: Request Verification
-    Frontend-->>Backend: Send Data
-    Backend-->>Data Base: Retrieve Inheritance Data
-    Backend-->>Circuit: Verify ZK Proof
-    Backend-->>Smart Contract: Release Funds
-    Backend-->>Frontend: Confirmation Message
+    User -->|Request Verification| Frontend
+    Frontend -->|Send Data| Backend
+    Backend -->|Retrieve Inheritance Data| DataBase
+    Backend -->|Verify ZK Proof| Circuit
+    Backend -->|Release Funds| SmartContract
+    Backend -->|Confirmation Message| Frontend
 ```
+
 1. User requests inheritance verification.
 2. The backend retrieves the stored data.
 3. The circuit verifies the legitimacy of the claim using a ZK proof.
